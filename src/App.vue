@@ -6,14 +6,13 @@
           class="cel"
           v-for="(row_item, row_index) in column_item"
           :key="row_index"
-          @click="a(column_index, row_index)"
         >
-          {{ row_item }}
-          <!-- <cell
-            :column="column_index"
-            :row="row_index"
+          <cell
+            :column_index="column_index"
+            :row_index="row_index"
+            :row_item="row_item"
             @on-cell-revealed="handleCellEvent"
-          /> -->
+          />
         </td>
       </tr>
     </table>
@@ -21,11 +20,11 @@
 </template>
 
 <script>
-// import cell from "@/components/cell";
+import cell from "@/components/cell";
 
 export default {
   components: {
-    // cell,
+    cell,
   },
   data: () => {
     return {
@@ -36,7 +35,6 @@ export default {
   },
   created() {
     this.grid = this.makeGrid();
-    console.log(this.grid);
     this.setMines();
   },
   methods: {
@@ -50,17 +48,18 @@ export default {
       return array;
     },
     setMines() {
-      for (let i = 0; i < this.grid.length; i++) {
-        for (let j = 0; j < this.grid[0].length; j++) {
-          this.$set(this.grid[i], j, { isMine: false, isRevealed: false });
+      this.grid.map((column, column_index) => {
+        for (let j = 0; j < column.length; j++) {
+          this.$set(this.grid[column_index], j, {
+            isMine: Boolean(Math.round(Math.random())),
+            isRevealed: false,
+          });
         }
-      }
-    },
-    a(column_index, row_index) {
-      this.$set(this.grid[column_index][row_index], "isRevealed", true);
+      });
     },
     handleCellEvent(event) {
-      console.log(event);
+      const { column_index, row_index } = event;
+      this.$set(this.grid[column_index][row_index], "isRevealed", true);
     },
   },
 };
