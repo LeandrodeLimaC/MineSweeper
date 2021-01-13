@@ -1,13 +1,16 @@
 <template>
   <div id="app">
     <table>
-      <td v-for="(row, index) in grid" :key="index">
-        <tr v-for="(column, index) in row" :key="index" v-on:click="test">
-          {{
-            index
-          }}
-        </tr>
-      </td>
+      <tr v-for="(column_item, index) in grid" :key="index">
+        <td
+          class="cel"
+          v-for="(row, index) in column_item"
+          :key="index"
+          v-on:click="test"
+        >
+          {{ index }}
+        </td>
+      </tr>
     </table>
   </div>
 </template>
@@ -39,5 +42,14 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+table {
+  border-collapse: collapse;
+}
+.cel {
+  width: 1rem;
+  height: 1rem;
+  text-align: center;
+  border: 1px solid black;
+}
 </style>
