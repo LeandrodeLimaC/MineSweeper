@@ -57,8 +57,33 @@ export default {
         }
       });
     },
+    countNearMines(column_index, row_index) {
+      let nearMines = 0;
+
+      for (let xoff = -1; xoff <= 1; xoff++) {
+        for (let yoff = -1; yoff <= 1; yoff++) {
+          let i = column_index + yoff;
+          let j = row_index + xoff;
+
+          if (i > -1 && i < this.totalColumns && j > -1 && j < this.totalRows) {
+            let neighbor = this.grid[i][j];
+
+            if (neighbor.isMine) nearMines++;
+          }
+        }
+      }
+
+      return nearMines;
+    },
     handleCellEvent(event) {
       const { column_index, row_index } = event;
+
+      this.$set(
+        this.grid[column_index][row_index],
+        "nearMines",
+        this.countNearMines(column_index, row_index)
+      );
+
       this.$set(this.grid[column_index][row_index], "isRevealed", true);
     },
   },

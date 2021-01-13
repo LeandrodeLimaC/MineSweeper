@@ -2,7 +2,7 @@
   <div @click="handleClick" style="height: 100%; width: 100%">
     <div v-show="row_item.isRevealed" style="height: 100%; width: 100%">
       <span v-if="row_item.isMine">M</span>
-      <span v-else>0</span>
+      <span v-else>{{ row_item.nearMines }}</span>
     </div>
   </div>
 </template>
