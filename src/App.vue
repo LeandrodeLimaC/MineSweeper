@@ -7,7 +7,11 @@
           v-for="(row_item, row_index) in column_item"
           :key="row_index"
         >
-          <cell :column="column_index" :row="row_index" />
+          <cell
+            :column="column_index"
+            :row="row_index"
+            @on-cell-revealed="handleCellEvent"
+          />
         </td>
       </tr>
     </table>
@@ -36,6 +40,11 @@ export default {
       }
 
       return array;
+    },
+  },
+  methods: {
+    handleCellEvent(event) {
+      console.log(event);
     },
   },
 };

@@ -1,5 +1,5 @@
 <template>
-  <div v-on:click="handleClick" style="height: 100%; width: 100%">
+  <div @click="handleClick" style="height: 100%; width: 100%">
     <div v-show="isRevealed" style="height: 100%; width: 100%">
       <span v-if="mine">M</span>
       <span v-else>0</span>
@@ -26,9 +26,13 @@ export default {
       if (this.isRevealed) return;
 
       this.isRevealed = true;
-      console.log(
-        `Posição : ${this.column}${this.row}, é uma mina: ${this.mine}`
-      );
+      // console.log(
+      //   `Posição : ${this.column}${this.row}, é uma mina: ${this.mine}`
+      // );
+      if (this.mine)
+        return this.$emit("on-cell-revealed", "Olá, sou uma mina, se fudeu");
+
+      this.$emit("on-cell-revealed", "Olá, não sou uma mina, tamujunto");
     },
   },
 };
