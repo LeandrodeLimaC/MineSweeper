@@ -1,14 +1,13 @@
 <template>
   <div id="app">
     <table>
-      <tr v-for="(column_item, index) in grid" :key="index">
+      <tr v-for="(column_item, column_index) in grid" :key="column_index">
         <td
           class="cel"
-          v-for="(row, index) in column_item"
-          :key="index"
-          v-on:click="test"
+          v-for="(row_item, row_index) in column_item"
+          :key="row_index"
         >
-          {{ index }}
+          <cell :column="column_index" :row="row_index" />
         </td>
       </tr>
     </table>
@@ -16,7 +15,12 @@
 </template>
 
 <script>
+import cell from "@/components/cell";
+
 export default {
+  components: {
+    cell,
+  },
   data: () => {
     return {
       totalRows: 10,
@@ -32,11 +36,6 @@ export default {
       }
 
       return array;
-    },
-  },
-  methods: {
-    test: () => {
-      console.log("olá");
     },
   },
 };
