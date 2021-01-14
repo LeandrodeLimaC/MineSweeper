@@ -3,6 +3,7 @@
     <table>
       <tr v-for="(column_item, column_index) in grid" :key="column_index">
         <td
+          style="margin: 0; padding: 0"
           class="cel"
           v-for="(row_item, row_index) in column_item"
           :key="row_index"
