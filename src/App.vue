@@ -32,7 +32,7 @@ export default {
       totalRows: 10,
       totalColumns: 10,
       grid: [],
-      totalMines: 10,
+      totalMines: 20,
     };
   },
   created() {
@@ -44,8 +44,8 @@ export default {
       let array = new Array(this.totalColumns);
 
       for (let i = 0; i < array.length; i++) {
-        let a = Array(this.totalRows),
-          j = 0;
+        let a = Array(this.totalRows);
+        let j = 0;
 
         while (j < this.totalRows) a[j++] = { isRevealed: false };
         array[i] = a;
@@ -53,22 +53,16 @@ export default {
 
       return array;
     },
+
     setMines() {
-      this.grid.map((column, column_index) => {
-        for (let j = 0; j < column.length; j++) {
-          let boolean;
+      for (let n = 0; n < this.totalMines; n++) {
+        let i = Math.round(Math.random() * (this.totalColumns - 1));
+        let j = Math.round(Math.random() * (this.totalRows - 1));
 
-          if (Boolean(Math.round(Math.random())) && this.totalMines) {
-            boolean = true;
-            this.totalMines--;
-          } else {
-            boolean = false;
-          }
-
-          this.$set(this.grid[column_index][j], "isMine", boolean);
-        }
-      });
+        this.$set(this.grid[i][j], "isMine", true);
+      }
     },
+
     countNearMines(column_index, row_index) {
       let nearMines = 0;
 
@@ -100,26 +94,30 @@ export default {
       this.$set(cell, "isRevealed", true);
 
       if (!cell.isMine && !cell.nearMines) {
-        this.floodFill(column_index, row_index);
+        this.loopNeighborCells({ column_index, row_index }, this.floodFill);
       }
     },
 
-    floodFill(column_index, row_index) {
+    loopNeighborCells({ column_index, row_index }, paramFunc) {
       for (let xoff = -1; xoff <= 1; xoff++) {
         for (let yoff = -1; yoff <= 1; yoff++) {
           let i = column_index + yoff;
           let j = row_index + xoff;
 
           if (i > -1 && i < this.totalColumns && j > -1 && j < this.totalRows) {
-            let neighbor = this.grid[i][j];
-
-            if (!neighbor.isMine && !neighbor.isRevealed) {
-              this.$set(neighbor, "isRevealed", true);
-
-              this.handleCellEvent({ column_index: i, row_index: j });
-            }
+            paramFunc(i, j);
           }
         }
+      }
+    },
+
+    floodFill(column_index, row_index) {
+      let neighbor = this.grid[column_index][row_index];
+
+      if (!neighbor.isMine && !neighbor.isRevealed) {
+        this.$set(neighbor, "isRevealed", true);
+
+        this.handleCellEvent({ column_index, row_index });
       }
     },
   },
@@ -127,6 +125,9 @@ export default {
 </script>
 
 <style scoped>
+.cel {
+  font-size: 14px;
+}
 table {
   border-collapse: collapse;
 }
