@@ -8,7 +8,6 @@
           v-for="(row_item, row_index) in column_item"
           :key="row_index"
         >
-          <!-- {{ row_item }} -->
           <cell
             :column_index="column_index"
             :row_index="row_index"
@@ -128,14 +127,12 @@ export default {
 <style scoped>
 .cel {
   font-size: 14px;
-}
-table {
-  border-collapse: collapse;
-}
-.cel {
   width: 1rem;
   height: 1rem;
   text-align: center;
   border: 1px solid black;
+}
+table {
+  border-collapse: collapse;
 }
 </style>

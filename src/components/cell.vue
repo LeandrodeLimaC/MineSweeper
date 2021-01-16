@@ -38,12 +38,8 @@
 </template>
 
 <script>
-// import { mdiBomb } from "@mdi/js";
 
 export default {
-  // components: {
-  //   mdiBomb,
-  // },
   props: {
     column_index: Number,
     row_index: Number,
@@ -55,12 +51,6 @@ export default {
   methods: {
     handleClick: function () {
       if (this.isRevealed) return;
-
-      console.log(
-        `Posição : ${this.column_index}${this.row_index}, é uma mina: ${this.mine}`
-      );
-      // if (this.mine)
-      //   return this.$emit("on-cell-revealed", "Olá, sou uma mina, se fudeu");
 
       this.$emit("on-cell-revealed", {
         column_index: this.column_index,
