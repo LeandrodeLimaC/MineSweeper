@@ -24,30 +24,30 @@
 import cell from "@/components/cell";
 
 export default {
-  components: {
-    cell,
-  },
+  components: { cell },
   data: () => {
     return {
-      totalRows: 10,
-      totalColumns: 10,
+      maxColumns: 20,
+      maxRows: 10,
+      maxMines: 50,
       grid: [],
-      totalMines: 20,
     };
   },
   created() {
     this.grid = this.makeGrid();
+    console.log(this.grid);
     this.setMines();
   },
   methods: {
     makeGrid() {
-      let array = new Array(this.totalColumns);
+      let array = new Array(this.maxRows);
 
       for (let i = 0; i < array.length; i++) {
-        let a = Array(this.totalRows);
+        let a = Array(this.maxColumns);
         let j = 0;
 
-        while (j < this.totalRows) a[j++] = { isRevealed: false };
+        while (j < this.maxColumns) a[j++] = { isRevealed: false };
+
         array[i] = a;
       }
 
@@ -55,9 +55,9 @@ export default {
     },
 
     setMines() {
-      for (let n = 0; n < this.totalMines; n++) {
-        let i = Math.round(Math.random() * (this.totalColumns - 1));
-        let j = Math.round(Math.random() * (this.totalRows - 1));
+      for (let n = 0; n < this.maxMines; n++) {
+        let i = Math.round(Math.random() * (this.maxRows - 1));
+        let j = Math.round(Math.random() * (this.maxColumns - 1));
 
         this.$set(this.grid[i][j], "isMine", true);
       }
@@ -71,7 +71,7 @@ export default {
           let i = column_index + yoff;
           let j = row_index + xoff;
 
-          if (i > -1 && i < this.totalColumns && j > -1 && j < this.totalRows) {
+          if (i > -1 && i < this.maxRows && j > -1 && j < this.maxColumns) {
             let neighbor = this.grid[i][j];
 
             if (neighbor.isMine) nearMines++;
@@ -91,6 +91,7 @@ export default {
         "nearMines",
         this.countNearMines(column_index, row_index)
       );
+
       this.$set(cell, "isRevealed", true);
 
       if (!cell.isMine && !cell.nearMines) {
@@ -104,7 +105,7 @@ export default {
           let i = column_index + yoff;
           let j = row_index + xoff;
 
-          if (i > -1 && i < this.totalColumns && j > -1 && j < this.totalRows) {
+          if (i > -1 && i < this.maxRows && j > -1 && j < this.maxColumns) {
             paramFunc(i, j);
           }
         }
