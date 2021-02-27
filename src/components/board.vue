@@ -1,5 +1,5 @@
 <template>
-  <table>
+  <table cellpadding="0" cellspacing="0">
     <tr v-for="(row, row_index) in grid" :key="row_index">
       <cell
         v-for="(tile, tile_index) in row"
@@ -20,11 +20,22 @@ export default {
   props: {
     max_rows: Number,
     max_columns: Number,
-    max_mines: Number,
+    max_mines: {
+      type: Number,
+      required: true,
+    },
+    gameStats: {
+      type: Object,
+      required: true,
+    },
   },
-  data: () => {
+  data() {
     return {
       grid: [],
+      mines: {
+        total: this.max_mines,
+        found: 0,
+      },
     };
   },
   created() {
@@ -52,11 +63,16 @@ export default {
         let i = Math.round(Math.random() * (this.max_rows - 1));
         let j = Math.round(Math.random() * (this.max_columns - 1));
 
-        this.$set(this.grid[i][j], "isMine", true);
+        this.grid[i][j].isMine || this.$set(this.grid[i][j], "isMine", true);
       }
     },
 
     handleCellEvent(tile) {
+      if (this.gameStats.isGameOver) return;
+      !tile.isMine || this.gameOver();
+
+      console.log(this.mines.found);
+
       let neighbors = this.getNeigbors(tile.row, tile.column);
 
       tile.isRevealed = true;
@@ -65,6 +81,20 @@ export default {
       if (!tile.isMine && !tile.nearMines) {
         this.floodFill(neighbors);
       }
+    },
+
+    gameOver() {
+      this.$emit("on-game-over");
+
+      this.revealAllMines();
+    },
+
+    revealAllMines() {
+      this.grid.forEach((col) => {
+        col.forEach((tile) => {
+          !tile.isMine || (tile.isRevealed = true);
+        });
+      });
     },
 
     getNeigbors(row_index, column_index) {
@@ -105,8 +135,5 @@ export default {
 };
 </script>
 
-<style scoped>
-table {
-  border-collapse: collapse;
-}
+<style>
 </style>

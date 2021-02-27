@@ -1,6 +1,12 @@
 <template>
   <div id="app">
+    <h1>
+      <span v-show="!gameStats.isGameOver">Playing</span>
+      <span v-show="gameStats.isGameOver">Game Over</span>
+    </h1>
     <board
+      @on-game-over="handleGameOver"
+      :gameStats="gameStats"
       :max_rows="config.maxRows"
       :max_columns="config.maxColumns"
       :max_mines="config.maxMines"
@@ -15,6 +21,9 @@ export default {
   components: { board },
   data: () => {
     return {
+      gameStats: {
+        isGameOver: false,
+      },
       config: {
         maxColumns: 10,
         maxRows: 10,
@@ -22,10 +31,22 @@ export default {
       },
     };
   },
+  methods: {
+    handleGameOver() {
+      this.gameStats.isGameOver = true;
+    },
+  },
 };
 </script>
 
-<style scoped>
+<style>
+body {
+  display: flex;
+  justify-content: center;
+}
+h1 {
+  text-align: center;
+}
 table {
   border-collapse: collapse;
 }
