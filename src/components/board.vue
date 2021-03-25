@@ -4,7 +4,7 @@
       <cell
         v-for="(tile, tile_index) in row"
         :tile="tile"
-        @on-cell-revealed="handleCellEvent"
+        @on-cell-revealed="revealCell"
         :key="tile_index"
       />
     </tr>
@@ -20,58 +20,31 @@ export default {
   props: {
     max_rows: Number,
     max_columns: Number,
-    max_mines: {
-      type: Number,
-      required: true,
-    },
     gameStats: {
       type: Object,
+      required: true,
+    },
+    grid: {
+      type: Array,
       required: true,
     },
   },
   data() {
     return {
-      grid: [],
+      flagMode: false,
       mines: {
-        total: this.max_mines,
         found: 0,
       },
     };
   },
-  created() {
-    this.makeGrid();
-    this.setMines();
-  },
   methods: {
-    makeGrid() {
-      this.grid = new Array(this.max_rows).fill(0).map((row, rowIndex) => {
-        return new Array(this.max_columns)
-          .fill(0)
-          .map((column, columnIndex) => {
-            return {
-              row: rowIndex,
-              column: columnIndex,
-              flagged: false,
-              isRevealed: false,
-            };
-          });
-      });
-    },
-
-    setMines() {
-      for (let n = 0; n < this.max_mines; n++) {
-        let i = Math.round(Math.random() * (this.max_rows - 1));
-        let j = Math.round(Math.random() * (this.max_columns - 1));
-
-        this.grid[i][j].isMine || this.$set(this.grid[i][j], "isMine", true);
-      }
-    },
-
-    handleCellEvent(tile) {
+    revealCell(tile) {
       if (this.gameStats.isGameOver) return;
       !tile.isMine || this.gameOver();
 
-      console.log(this.mines.found);
+      if (this.flagMode) {
+        return (tile.flagged = true);
+      }
 
       let neighbors = this.getNeigbors(tile.row, tile.column);
 
@@ -127,7 +100,7 @@ export default {
     floodFill(neighbors) {
       neighbors.forEach((tile) => {
         if (!tile.isMine && !tile.isRevealed) {
-          this.handleCellEvent(tile);
+          tile.flagged || this.revealCell(tile);
         }
       });
     },
