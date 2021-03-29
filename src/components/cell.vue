@@ -33,7 +33,7 @@ export default {
     iconBomb,
   },
   methods: {
-    handleClick: function () {
+    handleClick() {
       if (this.isRevealed) return;
 
       this.$emit("on-cell-revealed", this.tile);
